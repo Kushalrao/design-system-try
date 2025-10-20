@@ -4,14 +4,12 @@
 //
 //  ⚠️  AUTO-GENERATED FILE - DO NOT EDIT MANUALLY
 //  Generated from Figma Variables via Style Dictionary
-//  Last updated: 2025-10-19T13:06:59.013Z
+//  Last updated: 2025-10-20T04:50:39.353Z
 //
 
 import SwiftUI
 
 extension Font {
-    static let headline = Font.system(size: 24, weight: .bold).lineSpacing(8)
-    static let title = Font.system(size: 20, weight: .semibold).lineSpacing(8)
-    static let body = Font.system(size: 16, weight: .regular).lineSpacing(8)
-    static let caption = Font.system(size: 12, weight: .regular).lineSpacing(4)
+    static let weightbold = Font.system(size: String value)
+    static let weightsemibold = Font.system(size: String value)
 }

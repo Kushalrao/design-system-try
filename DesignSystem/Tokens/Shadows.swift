@@ -4,7 +4,7 @@
 //
 //  ⚠️  AUTO-GENERATED FILE - DO NOT EDIT MANUALLY
 //  Generated from Figma Variables via Style Dictionary
-//  Last updated: 2025-10-19T13:06:59.013Z
+//  Last updated: 2025-10-20T04:50:39.353Z
 //
 
 import SwiftUI
@@ -24,6 +24,4 @@ struct Shadow {
 }
 
 extension Shadow {
-    static let card = Shadow(offset: CGSize(width: 0, height: 2), blur: 8, color: Color(hex: "#000000"), opacity: 0.1)
-    static let elevated = Shadow(offset: CGSize(width: 0, height: 4), blur: 16, color: Color(hex: "#000000"), opacity: 0.15)
 }

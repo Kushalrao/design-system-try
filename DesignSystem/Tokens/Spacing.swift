@@ -4,16 +4,20 @@
 //
 //  ⚠️  AUTO-GENERATED FILE - DO NOT EDIT MANUALLY
 //  Generated from Figma Variables via Style Dictionary
-//  Last updated: 2025-10-19T13:06:59.013Z
+//  Last updated: 2025-10-20T04:50:39.353Z
 //
 
 import SwiftUI
 
 struct Spacing {
-    static let xs: CGFloat = 4
-    static let small: CGFloat = 8
-    static let medium: CGFloat = 16
-    static let large: CGFloat = 24
-    static let xl: CGFloat = 32
-    static let xxl: CGFloat = 48
+    static let fontsizexl: CGFloat = 0
+    static let fontsizexs: CGFloat = 0
+    static let fontsizecapcaption: CGFloat = 0
+    static let largelineheight: CGFloat = 0
+    static let averagelineheight: CGFloat = 0
+    static let fontsizem: CGFloat = 0
+    static let s: CGFloat = 7
+    static let m: CGFloat = 11
+    static let l: CGFloat = 14
+    static let xl: CGFloat = 21
 }
