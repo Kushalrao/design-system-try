@@ -7,12 +7,17 @@ figma.showUI(__html__, { width: 320, height: 500 });
 // Handle messages from UI
 figma.ui.onmessage = async (msg) => {
   try {
+    console.log('Plugin received message:', msg.type);
+    
     switch (msg.type) {
       case 'get-variables':
         await handleGetVariables();
         break;
         
       case 'export-to-github':
+        if (!msg.githubToken || !msg.repoOwner || !msg.repoName) {
+          throw new Error('Missing GitHub credentials');
+        }
         await handleExportToGitHub(msg.githubToken, msg.repoOwner, msg.repoName);
         break;
         
@@ -21,9 +26,13 @@ figma.ui.onmessage = async (msg) => {
     }
   } catch (error) {
     console.error('Plugin error:', error);
+    const errorMessage = (error && typeof error === 'object' && error.message) 
+      ? error.message 
+      : (typeof error === 'string' ? error : 'Unknown error occurred');
+    
     figma.ui.postMessage({
       type: 'export-error',
-      error: error && error.message ? error.message : 'Unknown error occurred'
+      error: errorMessage
     });
   }
 };
@@ -191,11 +200,14 @@ function sanitizeVariableName(name) {
 
 // Commit tokens to GitHub
 async function commitToGitHub(githubToken, repoOwner, repoName, tokens) {
+  console.log('Starting GitHub commit process...');
+  
   const url = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/tokens/figma-tokens.json`;
   
   // Get existing file SHA (if exists)
   let existingSha = null;
   try {
+    console.log('Checking for existing file...');
     const existingResponse = await fetch(url, {
       headers: {
         'Authorization': `token ${githubToken}`,
@@ -206,8 +218,12 @@ async function commitToGitHub(githubToken, repoOwner, repoName, tokens) {
     if (existingResponse.ok) {
       const existingData = await existingResponse.json();
       existingSha = existingData.sha;
+      console.log('Found existing file, will update');
+    } else {
+      console.log('No existing file found, will create new');
     }
   } catch (error) {
+    console.log('Error checking existing file:', error);
     // File doesn't exist yet, that's okay
   }
 
