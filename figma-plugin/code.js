@@ -198,6 +198,28 @@ function sanitizeVariableName(name) {
     .replace(/^borderradius/, '');
 }
 
+// Simple base64 encoding function (since btoa might not be available)
+function base64Encode(str) {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+  let result = '';
+  let i = 0;
+  
+  while (i < str.length) {
+    const a = str.charCodeAt(i++);
+    const b = i < str.length ? str.charCodeAt(i++) : 0;
+    const c = i < str.length ? str.charCodeAt(i++) : 0;
+    
+    const bitmap = (a << 16) | (b << 8) | c;
+    
+    result += chars.charAt((bitmap >> 18) & 63);
+    result += chars.charAt((bitmap >> 12) & 63);
+    result += i - 2 < str.length ? chars.charAt((bitmap >> 6) & 63) : '=';
+    result += i - 1 < str.length ? chars.charAt(bitmap & 63) : '=';
+  }
+  
+  return result;
+}
+
 // Commit tokens to GitHub
 async function commitToGitHub(githubToken, repoOwner, repoName, tokens) {
   console.log('Starting GitHub commit process...');
@@ -237,7 +259,8 @@ async function commitToGitHub(githubToken, repoOwner, repoName, tokens) {
     }
   }, tokens), null, 2);
 
-  const encodedContent = btoa(content);
+  // Encode content to base64
+  const encodedContent = base64Encode(content);
   
   const commitData = {
     message: `Update design tokens from Figma - ${new Date().toISOString()}`,
@@ -250,6 +273,10 @@ async function commitToGitHub(githubToken, repoOwner, repoName, tokens) {
   }
 
   // Commit to GitHub
+  console.log('Sending request to GitHub API...');
+  console.log('URL:', url);
+  console.log('Commit data:', commitData);
+  
   const response = await fetch(url, {
     method: 'PUT',
     headers: {
@@ -260,9 +287,17 @@ async function commitToGitHub(githubToken, repoOwner, repoName, tokens) {
     body: JSON.stringify(commitData)
   });
 
+  console.log('GitHub API response status:', response.status);
+  
   if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(`GitHub API error: ${errorData.message || response.statusText}`);
+    let errorMessage = `GitHub API error: ${response.status} ${response.statusText}`;
+    try {
+      const errorData = await response.json();
+      errorMessage = `GitHub API error: ${errorData.message || response.statusText}`;
+    } catch (e) {
+      // Couldn't parse error response, use status text
+    }
+    throw new Error(errorMessage);
   }
 
   const result = await response.json();
