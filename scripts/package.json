@@ -1,0 +1,25 @@
+{
+  "name": "figma-design-system-sync",
+  "version": "1.0.0",
+  "description": "Sync Figma Variables to iOS Design System",
+  "main": "sync-figma.js",
+  "scripts": {
+    "sync": "node sync-figma.js",
+    "sync-file": "node sync-figma-file.js",
+    "sync-enhanced": "node sync-figma-enhanced.js",
+    "sync-plugin": "node sync-plugin.js",
+    "build-tokens": "npx style-dictionary build --config style-dictionary.config.js",
+    "generate-swift": "node generate-swift.js",
+    "webhook": "node ../webhook-server.js",
+    "clean": "rm -rf ../DesignSystem/Tokens/*.swift"
+  },
+  "dependencies": {
+    "style-dictionary": "^3.9.2",
+    "axios": "^1.6.0",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {},
+  "keywords": ["figma", "design-system", "ios", "swift", "tokens"],
+  "author": "",
+  "license": "MIT"
+}

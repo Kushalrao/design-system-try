@@ -1,0 +1,13 @@
+{
+  "name": "figma-design-tokens-plugin",
+  "version": "1.0.0",
+  "description": "Figma plugin to sync design tokens to GitHub",
+  "main": "code.js",
+  "scripts": {
+    "build": "echo 'Plugin ready for Figma'",
+    "test": "echo 'Test the plugin in Figma'"
+  },
+  "keywords": ["figma", "plugin", "design-tokens", "github", "sync"],
+  "author": "",
+  "license": "MIT"
+}

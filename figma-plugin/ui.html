@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Design Tokens Sync</title>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #ffffff;
+    }
+    
+    .container {
+      max-width: 300px;
+    }
+    
+    h1 {
+      font-size: 16px;
+      font-weight: 600;
+      margin: 0 0 16px 0;
+      color: #000000;
+    }
+    
+    .section {
+      margin-bottom: 20px;
+    }
+    
+    .label {
+      font-size: 12px;
+      font-weight: 500;
+      color: #666666;
+      margin-bottom: 8px;
+      display: block;
+    }
+    
+    input, textarea {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #e5e5e5;
+      border-radius: 6px;
+      font-size: 12px;
+      font-family: inherit;
+      box-sizing: border-box;
+    }
+    
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #007AFF;
+    }
+    
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #007AFF;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-bottom: 8px;
+    }
+    
+    button:hover {
+      background: #0056CC;
+    }
+    
+    button:disabled {
+      background: #cccccc;
+      cursor: not-allowed;
+    }
+    
+    .status {
+      font-size: 11px;
+      padding: 8px;
+      border-radius: 4px;
+      margin-top: 12px;
+      display: none;
+    }
+    
+    .status.success {
+      background: #e8f5e8;
+      color: #2d5a2d;
+      border: 1px solid #c3e6c3;
+    }
+    
+    .status.error {
+      background: #ffeaea;
+      color: #8b0000;
+      border: 1px solid #ffcccc;
+    }
+    
+    .status.info {
+      background: #e8f4fd;
+      color: #1e3a8a;
+      border: 1px solid #bfdbfe;
+    }
+    
+    .token-count {
+      font-size: 11px;
+      color: #666666;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Design Tokens Sync</h1>
+    
+    <div class="section">
+      <label class="label">GitHub Token</label>
+      <input type="password" id="githubToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+    </div>
+    
+    <div class="section">
+      <label class="label">Repository Owner</label>
+      <input type="text" id="repoOwner" placeholder="your-username">
+    </div>
+    
+    <div class="section">
+      <label class="label">Repository Name</label>
+      <input type="text" id="repoName" placeholder="your-repo">
+    </div>
+    
+    <div class="section">
+      <button id="exportBtn" onclick="exportVariables()">Export Variables to GitHub</button>
+      <button id="previewBtn" onclick="previewVariables()">Preview Variables</button>
+    </div>
+    
+    <div id="status" class="status"></div>
+    <div id="tokenCount" class="token-count"></div>
+  </div>
+
+  <script>
+    // Load saved settings
+    window.onload = function() {
+      const savedToken = localStorage.getItem('githubToken');
+      const savedOwner = localStorage.getItem('repoOwner');
+      const savedName = localStorage.getItem('repoName');
+      
+      if (savedToken) document.getElementById('githubToken').value = savedToken;
+      if (savedOwner) document.getElementById('repoOwner').value = savedOwner;
+      if (savedName) document.getElementById('repoName').value = savedName;
+    };
+
+    function showStatus(message, type = 'info') {
+      const statusEl = document.getElementById('status');
+      statusEl.textContent = message;
+      statusEl.className = `status ${type}`;
+      statusEl.style.display = 'block';
+    }
+
+    function hideStatus() {
+      document.getElementById('status').style.display = 'none';
+    }
+
+    function updateTokenCount(count) {
+      document.getElementById('tokenCount').textContent = `Found ${count} variables`;
+    }
+
+    async function previewVariables() {
+      try {
+        showStatus('Loading variables...', 'info');
+        
+        // Request variables from plugin
+        parent.postMessage({ pluginMessage: { type: 'get-variables' } }, '*');
+        
+      } catch (error) {
+        showStatus(`Error: ${error.message}`, 'error');
+      }
+    }
+
+    async function exportVariables() {
+      const githubToken = document.getElementById('githubToken').value.trim();
+      const repoOwner = document.getElementById('repoOwner').value.trim();
+      const repoName = document.getElementById('repoName').value.trim();
+
+      if (!githubToken || !repoOwner || !repoName) {
+        showStatus('Please fill in all fields', 'error');
+        return;
+      }
+
+      // Save settings
+      localStorage.setItem('githubToken', githubToken);
+      localStorage.setItem('repoOwner', repoOwner);
+      localStorage.setItem('repoName', repoName);
+
+      try {
+        showStatus('Exporting variables to GitHub...', 'info');
+        
+        // Request export from plugin
+        parent.postMessage({ 
+          pluginMessage: { 
+            type: 'export-to-github',
+            githubToken,
+            repoOwner,
+            repoName
+          } 
+        }, '*');
+        
+      } catch (error) {
+        showStatus(`Error: ${error.message}`, 'error');
+      }
+    }
+
+    // Listen for messages from plugin
+    window.addEventListener('message', (event) => {
+      const { type, data, error } = event.data.pluginMessage || {};
+      
+      switch (type) {
+        case 'variables-loaded':
+          updateTokenCount(data.count);
+          showStatus(`Found ${data.count} variables`, 'success');
+          break;
+          
+        case 'export-success':
+          showStatus(`✅ Successfully exported ${data.count} variables to GitHub!`, 'success');
+          break;
+          
+        case 'export-error':
+          showStatus(`❌ Export failed: ${error}`, 'error');
+          break;
+          
+        case 'loading':
+          showStatus(data.message, 'info');
+          break;
+      }
+    });
+  </script>
+</body>
+</html>

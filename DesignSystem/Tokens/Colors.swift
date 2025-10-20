@@ -1,0 +1,70 @@
+//
+//  Colors.swift
+//  Design System
+//
+//  ⚠️  AUTO-GENERATED FILE - DO NOT EDIT MANUALLY
+//  Generated from Figma Variables via Style Dictionary
+//  Last updated: 2025-10-19T13:06:59.013Z
+//
+
+import SwiftUI
+
+extension Color {
+    static let carbonneutral300 = Color(hex: "#323232")
+    static let carbondarkest = Color(hex: "#ffffff")
+    static let shadeswh0 = Color(hex: "#ffffff")
+    static let silver = Color(hex: "#ffffff")
+    static let grey = Color(hex: "#ffffff")
+    static let simpleshadesblack = Color(hex: "#313131")
+    static let grey4 = Color(hex: "#ffffff")
+    static let sgreen = Color(hex: "#ffffff")
+    static let graysgray = Color(hex: "#ffffff")
+    static let spurple = Color(hex: "#ffffff")
+    static let warningred400 = Color(hex: "#ffffff")
+    static let successgreen400 = Color(hex: "#ffffff")
+    static let primaryscapia600 = Color(hex: "#313131")
+    static let neutralgrey700 = Color(hex: "#ffffff")
+    static let warningred600 = Color(hex: "#ffffff")
+    static let primaryscapia300 = Color(hex: "#313131")
+    static let texthighemphasis = Color(hex: "#313131")
+    static let warningred100 = Color(hex: "#323232")
+    static let secondaryblue500 = Color(hex: "#000000")
+    static let sorange = Color(hex: "#ffffff")
+    static let secondaryblue400 = Color(hex: "#ffffff")
+    static let alertyellow400 = Color(hex: "#ffffff")
+    static let primaryscapia000 = Color(hex: "#313131")
+    static let primaryscapia400 = Color(hex: "#313131")
+    static let sred = Color(hex: "#ffffff")
+    static let neutragrey100 = Color(hex: "#323232")
+    static let neutralgrey200 = Color(hex: "#323232")
+    static let textlowemphasis = Color(hex: "#313131")
+    static let secondaryblue200 = Color(hex: "#323232")
+    static let textwhite = Color(hex: "#ffffff")
+    static let successgreen500 = Color(hex: "#000000")
+    static let successgreen200 = Color(hex: "#323232")
+    static let successgreen100 = Color(hex: "#323232")
+    static let successgreen300 = Color(hex: "#323232")
+    static let secondaryblue300 = Color(hex: "#323232")
+    static let neutralgrey300 = Color(hex: "#323232")
+    static let primaryscapia800 = Color(hex: "#313131")
+    static let primaryscapia200 = Color(hex: "#313131")
+    static let primaryscapia100 = Color(hex: "#323232")
+    static let neutralgrey000 = Color(hex: "#ffffff")
+    static let neutralgrey500 = Color(hex: "#000000")
+    static let neutralgrey600 = Color(hex: "#ffffff")
+    static let primaryscapia500 = Color(hex: "#313131")
+    static let neutralgrey900 = Color(hex: "#faf8f5")
+    static let neutralgrey800 = Color(hex: "#ffffff")
+    static let alertyellow600 = Color(hex: "#ffffff")
+    static let alertyellow000 = Color(hex: "#ffffff")
+    static let alertyellow100 = Color(hex: "#323232")
+    static let neutralslightblueneutrals01 = Color(hex: "#323232")
+    static let scapiaGreen = Color(hex: "#b8f928")
+    static let scapiaRed = Color(hex: "#f94828")
+    static let cream = Color(hex: "#faf9f7")
+    static let darkText = Color(hex: "#111111")
+    static let white = Color(hex: "#ffffff")
+    static let lightGray = Color(hex: "#f3f3f3")
+    static let mediumGray = Color(hex: "#d9d9d9")
+    static let darkGray = Color(hex: "#0f0f0f")
+}

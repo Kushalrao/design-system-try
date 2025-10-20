@@ -1,0 +1,85 @@
+name: Figma Tokens Sync
+
+on:
+  push:
+    paths: 
+      - 'tokens/figma-tokens.json'
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  sync-tokens:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: 'scripts/package-lock.json'
+      
+      - name: Install dependencies
+        run: |
+          cd scripts
+          npm ci
+      
+      - name: Generate Swift tokens
+        run: |
+          cd scripts
+          npm run generate-swift
+      
+      - name: Check for changes
+        id: check-changes
+        run: |
+          if git diff --quiet DesignSystem/Tokens/; then
+            echo "changes=false" >> $GITHUB_OUTPUT
+          else
+            echo "changes=true" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Commit generated files
+        if: steps.check-changes.outputs.changes == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add DesignSystem/Tokens/
+          git commit -m "🤖 Auto-update design tokens from Figma
+
+          Generated from: ${{ github.event.head_commit.message }}
+          Commit: ${{ github.sha }}"
+          git push
+      
+      - name: Trigger webhook
+        if: steps.check-changes.outputs.changes == 'true'
+        run: |
+          if [ -n "${{ secrets.WEBHOOK_URL }}" ]; then
+            curl -X POST "${{ secrets.WEBHOOK_URL }}" \
+              -H "Content-Type: application/json" \
+              -d '{
+                "event": "tokens_updated",
+                "repository": "${{ github.repository }}",
+                "commit": "${{ github.sha }}",
+                "timestamp": "'$(date -u +%Y-%m-%dT%H:%M:%SZ)'"
+              }'
+          fi
+      
+      - name: Summary
+        run: |
+          echo "## 🎨 Design Tokens Sync Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Triggered by:** ${{ github.event.head_commit.message }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Changes:** ${{ steps.check-changes.outputs.changes }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.check-changes.outputs.changes }}" == "true" ]; then
+            echo "✅ Swift design token files updated successfully" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "ℹ️ No changes detected in generated files" >> $GITHUB_STEP_SUMMARY
+          fi
