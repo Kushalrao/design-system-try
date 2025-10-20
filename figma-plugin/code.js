@@ -23,7 +23,7 @@ figma.ui.onmessage = async (msg) => {
     console.error('Plugin error:', error);
     figma.ui.postMessage({
       type: 'export-error',
-      error: error.message
+      error: error && error.message ? error.message : 'Unknown error occurred'
     });
   }
 };
@@ -53,7 +53,7 @@ async function handleGetVariables() {
   } catch (error) {
     figma.ui.postMessage({
       type: 'export-error',
-      error: `Failed to load variables: ${error.message}`
+      error: `Failed to load variables: ${error && error.message ? error.message : 'Unknown error'}`
     });
   }
 }
@@ -83,7 +83,7 @@ async function handleExportToGitHub(githubToken, repoOwner, repoName) {
   } catch (error) {
     figma.ui.postMessage({
       type: 'export-error',
-      error: `GitHub export failed: ${error.message}`
+      error: `GitHub export failed: ${error && error.message ? error.message : 'Unknown error'}`
     });
   }
 }

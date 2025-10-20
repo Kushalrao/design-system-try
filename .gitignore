@@ -21,7 +21,7 @@ DerivedData
 
 # Design System
 scripts/.env
-tokens/figma-tokens.json
+# tokens/figma-tokens.json - Allow this file for plugin workflow
 node_modules/
 
 # CocoaPods

@@ -133,15 +133,10 @@
   </div>
 
   <script>
-    // Load saved settings
+    // Load saved settings (disabled in Figma plugin environment)
     window.onload = function() {
-      const savedToken = localStorage.getItem('githubToken');
-      const savedOwner = localStorage.getItem('repoOwner');
-      const savedName = localStorage.getItem('repoName');
-      
-      if (savedToken) document.getElementById('githubToken').value = savedToken;
-      if (savedOwner) document.getElementById('repoOwner').value = savedOwner;
-      if (savedName) document.getElementById('repoName').value = savedName;
+      // localStorage is disabled in Figma plugins
+      // Settings will need to be entered each time
     };
 
     function showStatus(message, type = 'info') {
@@ -181,10 +176,7 @@
         return;
       }
 
-      // Save settings
-      localStorage.setItem('githubToken', githubToken);
-      localStorage.setItem('repoOwner', repoOwner);
-      localStorage.setItem('repoName', repoName);
+      // Settings are not saved in Figma plugin environment
 
       try {
         showStatus('Exporting variables to GitHub...', 'info');
